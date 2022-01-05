@@ -1,22 +1,39 @@
 package com.benimar.domotics;
 
+import com.benimar.domotics.domain.ApplicationUser;
+import com.benimar.domotics.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @SpringBootApplication
 public class DomoticsApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(DomoticsApplication.class);
 
+	@Autowired
+	private UserRepository userRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DomoticsApplication.class, args);
 		logger.info("Domotics App INITIALIZED!!!");
+	}
+
+	@Bean
+	CommandLineRunner runner() {
+		return args -> {
+			// username: user password: user
+			userRepository.save(new ApplicationUser("user",
+					"$2a$04$1.YhMIgNX/8TkCKGFUONWO1waedKhQ5KrnB30fl0Q01QKqmzLf.Zi",
+					"USER"));
+			// username: admin password: admin
+			userRepository.save(new ApplicationUser("admin",
+					"$2a$04$KNLUwOWHVQZVpXyMBNc7JOzbLiBjb9Tk9bP7KNcPI12ICuvzXQQKG",
+					"ADMIN"));
+		};
 	}
 }

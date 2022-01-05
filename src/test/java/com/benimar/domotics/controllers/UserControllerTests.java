@@ -1,6 +1,6 @@
 package com.benimar.domotics.controllers;
 
-import com.benimar.domotics.domain.User;
+import com.benimar.domotics.domain.ApplicationUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +16,8 @@ public class UserControllerTests {
     private UserController userController;
 
     @Test
-    public void findAllUsers() {
-        List<User> users = userController.findAll();
-        assertEquals(users.size(), 0);
+    public void findAllTest() {
+        List<ApplicationUser> users = userController.findAll();
+        assertEquals(users.size(), 2);
     }
 }
