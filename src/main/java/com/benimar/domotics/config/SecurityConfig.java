@@ -1,5 +1,6 @@
 package com.benimar.domotics.config;
 
+import com.benimar.domotics.domain.Role;
 import com.benimar.domotics.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
