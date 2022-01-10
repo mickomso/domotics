@@ -1,7 +1,8 @@
 package com.benimar.domotics.config;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,22 +20,19 @@ public class AuthenticationTests {
     private MockMvc mvc;
 
     @Test
-    @DisplayName("Test calling /users endpoint without authentication returns unauthorized.")
-    public void authenticatingWithoutUser() throws Exception {
+    public void givenNoUser_shouldFailedWith401() throws Exception {
         mvc.perform(get("/users")).andExpect(status().isUnauthorized());
     }
 
-    @Test
-    @DisplayName("Test calling /users endpoint with valid authentication returns ok.")
-    public void authenticatingWithValidUser() throws Exception {
-        mvc.perform(get("/v1/users").with(httpBasic("admin", "admin")))
-                .andExpect(status().isOk());
+    @ParameterizedTest
+    @CsvSource(value = {"user, user", "admin, admin"})
+    public void givenValidUser_shouldSucceedWith200(String user, String password) throws Exception {
+        mvc.perform(get("/v1/users").with(httpBasic(user, password))).andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("Test calling /users endpoint with wrong authentication returns unauthorized.")
-    public void authenticatingWithInvalidUser() throws Exception {
-        mvc.perform(get("/v1/users").with(httpBasic("wrong", "wrong")))
-                .andExpect(status().isUnauthorized());
+    @ParameterizedTest
+    @CsvSource(value = {"user, admin", "admin, user", "wrong, wrong"})
+    public void givenInvalidUser_shouldFailedWith401(String user, String password) throws Exception {
+        mvc.perform(get("/v1/users").with(httpBasic(user, password))).andExpect(status().isUnauthorized());
     }
 }
